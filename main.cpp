@@ -28,6 +28,7 @@
 #include <QQmlApplicationEngine>
 
 #include "radialbar.h"
+#include "radialbarmax.h"
 
 int main(int argc, char *argv[])
 {
@@ -35,9 +36,10 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     qmlRegisterType<RadialBar>("CustomControls", 1, 0, "RadialBar");
+    qmlRegisterType<RadialBarMax>("CustomControls", 1, 0, "RadialBarMax");
 
     QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/main2.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/main3.qml")));
 
     return app.exec();
 }
