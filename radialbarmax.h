@@ -52,8 +52,8 @@ class RadialBarMax : public QQuickPaintedItem
     Q_PROPERTY(bool showText READ isShowText WRITE setShowText)
     Q_PROPERTY(Qt::PenCapStyle penStyle READ getPenStyle WRITE setPenStyle NOTIFY penStyleChanged)
     Q_PROPERTY(DialType dialType READ getDialType WRITE setDialType NOTIFY dialTypeChanged)
+    Q_PROPERTY(FillType fillType READ getFillType WRITE setFillType NOTIFY fillTypeChanged)
     Q_PROPERTY(QFont textFont READ getTextFont WRITE setTextFont NOTIFY textFontChanged)
-    Q_PROPERTY(bool rotateGradient READ isRotateGradient WRITE setRotateGradient)
 
 public:
     RadialBarMax(QQuickItem *parent = nullptr);
@@ -66,6 +66,14 @@ public:
         NoDial
     };
     Q_ENUM(DialType)
+
+    enum FillType {
+        Solid,
+        Gradient,
+        RotateGradient,
+        Point
+    };
+    Q_ENUM(FillType)
 
     qreal getSize() {return m_Size;}
     qreal getStartAngle() {return m_StartAngle;}
@@ -88,8 +96,8 @@ public:
     bool isShowText() {return m_ShowText;}
     Qt::PenCapStyle getPenStyle() {return m_PenStyle;}
     DialType getDialType() {return m_DialType;}
+    FillType getFillType() {return m_FillType;}
     QFont getTextFont() {return m_TextFont;}
-    bool isRotateGradient() {return m_RotateGradient;}
 
     void setSize(qreal size);
     void setStartAngle(qreal angle);
@@ -110,8 +118,8 @@ public:
     void setShowText(bool show);
     void setPenStyle(Qt::PenCapStyle style);
     void setDialType(DialType type);
+    void setFillType(FillType type);
     void setTextFont(QFont font);
-    void setRotateGradient(bool rotate);
 
 signals:
     void sizeChanged();
@@ -132,6 +140,7 @@ signals:
     void textShadowColorChanged();
     void penStyleChanged();
     void dialTypeChanged();
+    void fillTypeChanged();
     void textFontChanged();
 
 private:
@@ -156,8 +165,8 @@ private:
     bool m_ShowText;
     Qt::PenCapStyle m_PenStyle;
     DialType m_DialType;
+    FillType m_FillType;
     QFont m_TextFont;
-    bool m_RotateGradient;
 
     static int ShadowOffsetX;
     static int ShadowOffsetY;

@@ -10,7 +10,7 @@ import QtQuick.Layouts 1.1
 ApplicationWindow {
     id: appwnd
     visible: true
-    width: 700
+    width: 1400
     height: 700
     title: qsTr("Hello World")
 
@@ -19,7 +19,7 @@ ApplicationWindow {
 
     property real targetTemp: 110
     property real tempColdToHotActVal: 45
-    property real tempHotToColeActVal: 110 - 45
+    property real tempHotToColdActVal: 110 - 45
     property real tempMinVal: 25
     property real tempMaxVal: 110
 
@@ -32,130 +32,8 @@ ApplicationWindow {
     property var startTime: new Date()
     property int currentTimeMS: 0
 
-    Rectangle {
-        anchors.fill: parent
-        color: "#000000"
-    }
+    property real pointTempVal: 50
 
-    RadialBarMax {
-        id: outer
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-        width: parent.width
-        height: parent.height
-        penStyle: Qt.RoundCap
-        //backgroundColor: "#111111"
-
-        progressMinColor: "green"
-        progressMidColor: "orange"
-        progressMaxColor: "yellow"
-
-        foregroundColor: "#111111"//"#191a2f"
-        dialWidth: 12
-        minValue: timeMinVal
-        maxValue: timeMaxVal
-        value: timeActVal
-        format: "%TIME%"
-        textVertOffset: -60
-        //suffixText: ""
-        //showText: false
-        textFont {
-            family: "Halvetica"
-            italic: false
-            pointSize: 40
-        }
-        textColor: "#3db82d"
-
-        RadialBarMax {
-            id: middle
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width - innerMargin
-            height: parent.height - innerMargin
-
-            penStyle: Qt.RoundCap
-            //backgroundColor: "#111111"
-            progressMinColor: "#222222"
-            progressMidColor: "#888888"
-            progressMaxColor: "#ffffff"
-            rotateGradient: true
-
-            foregroundColor: "#111111"//"#191a2f"
-            dialWidth: 12
-            minValue: timeMinVal
-            maxValue: timeMaxVal
-            value: timeActVal
-            format: "%ETIME%"
-            textVertOffset: -20
-            //suffixText: ""
-            //showText: false
-            textFont {
-                family: "Halvetica"
-                italic: false
-                pointSize: 40
-            }
-            textColor: "#3db82d"
-
-            RadialBarMax {
-                id: inner
-                //anchors.left: parent.left - innerMargin
-                //anchors.right: parent.right - innerMargin
-                //anchors.top: parent.top - innerMargin
-                //anchors.bottom: parent.bottom - innerMargin
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width - innerMargin
-                height: parent.height - innerMargin
-
-                penStyle: Qt.RoundCap
-                progressMinColor: "blue"
-                progressMidColor: "white"
-                progressMaxColor: "red"
-                foregroundColor: "#191a2f"
-                dialWidth: 12
-                minValue: tempMinVal
-                maxValue: tempMaxVal
-                value: tempColdToHotActVal
-                format: "%0.2f°"
-                textVertOffset: 20
-                //suffixText: "°"
-                textFont {
-                    family: "Halvetica"
-                    italic: false
-                    pointSize: 40
-                }
-                textColor: "#3db82d"
-
-                RadialBarMax {
-                    id: inner2
-                    dialType: RadialBarMax.MaxToMin
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width: parent.width - innerMargin
-                    height: parent.height - innerMargin
-
-                    penStyle: Qt.RoundCap
-                    progressMinColor: "red"
-                    progressMidColor: "white"
-                    progressMaxColor: "blue"
-                    foregroundColor: "#191a2f"
-                    dialWidth: 12
-                    minValue: tempMinVal
-                    maxValue: tempMaxVal
-                    value: tempHotToColeActVal
-                    format: "%0.2f°"
-                    textVertOffset: 60
-                    //suffixText: "°"
-                    textFont {
-                        family: "Halvetica"
-                        italic: false
-                        pointSize: 40
-                    }
-                    textColor: "#3db82d"
-                }
-            }
-        }
-    }
 
     Component.onCompleted: {
         console.log("Completed Running!")
@@ -180,6 +58,240 @@ ApplicationWindow {
         return target
     }
 
+    Rectangle {
+        id: rectLeft
+        width: 700
+        color: "#000000"
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        anchors.top: parent.top
+        anchors.topMargin: 0
+
+        RadialBarMax {
+            id: outer
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            width: parent.width
+            height: parent.height
+            penStyle: Qt.RoundCap
+            //backgroundColor: "#111111"
+
+            progressMinColor: "#222222"
+            progressMidColor: "#888888"
+            progressMaxColor: "#ffffff"
+            fillType: RadialBarMax.Gradient
+
+            foregroundColor: "#111111"//"#191a2f"
+            dialWidth: 12
+            minValue: timeMinVal
+            maxValue: timeMaxVal
+            value: timeActVal
+            format: "%TIME%"
+            textVertOffset: -60
+            //suffixText: ""
+            //showText: false
+            textFont {
+                family: "Halvetica"
+                italic: false
+                pointSize: 40
+            }
+            textColor: "#3db82d"
+
+            RadialBarMax {
+                id: middle
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width - innerMargin
+                height: parent.height - innerMargin
+
+                penStyle: Qt.RoundCap
+                //backgroundColor: "#111111"
+                progressMinColor: "#222222"
+                progressMidColor: "#888888"
+                progressMaxColor: "#ffffff"
+                fillType: RadialBarMax.RotateGradient
+
+                foregroundColor: "#111111"//"#191a2f"
+                dialWidth: 12
+                minValue: timeMinVal
+                maxValue: timeMaxVal
+                value: timeActVal
+                format: "%ETIME%"
+                textVertOffset: -20
+                //suffixText: ""
+                //showText: false
+                textFont {
+                    family: "Halvetica"
+                    italic: false
+                    pointSize: 40
+                }
+                textColor: "#3db82d"
+
+                RadialBarMax {
+                    id: inner
+                    //anchors.left: parent.left - innerMargin
+                    //anchors.right: parent.right - innerMargin
+                    //anchors.top: parent.top - innerMargin
+                    //anchors.bottom: parent.bottom - innerMargin
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width - innerMargin
+                    height: parent.height - innerMargin
+
+                    penStyle: Qt.RoundCap
+                    progressMinColor: "blue"
+                    progressMidColor: "white"
+                    progressMaxColor: "red"
+                    fillType: RadialBarMax.Gradient
+
+                    foregroundColor: "#191a2f"
+                    dialWidth: 12
+                    minValue: tempMinVal
+                    maxValue: tempMaxVal
+                    value: tempColdToHotActVal
+                    format: "%0.2f°"
+                    textVertOffset: 20
+                    //suffixText: "°"
+                    textFont {
+                        family: "Halvetica"
+                        italic: false
+                        pointSize: 40
+                    }
+                    textColor: "#3db82d"
+
+                    RadialBarMax {
+                        id: inner2
+                        dialType: RadialBarMax.MaxToMin
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: parent.width - innerMargin
+                        height: parent.height - innerMargin
+
+                        penStyle: Qt.RoundCap
+                        progressMinColor: "blue"
+                        progressMidColor: "white"
+                        progressMaxColor: "red"
+                        fillType: RadialBarMax.Gradient
+                        foregroundColor: "#191a2f"
+                        dialWidth: 12
+                        minValue: tempMinVal
+                        maxValue: tempMaxVal
+                        value: tempHotToColdActVal
+                        format: "%0.2f°"
+                        textVertOffset: 60
+                        //suffixText: "°"
+                        textFont {
+                            family: "Halvetica"
+                            italic: false
+                            pointSize: 40
+                        }
+                        textColor: "#3db82d"
+                    }
+                }
+            }
+        }
+    }
+
+    Rectangle {
+        id: rectRight
+        color: "#000000"
+        anchors.left: rectLeft.right
+        anchors.leftMargin: 0
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        anchors.top: parent.top
+        anchors.topMargin: 0
+
+        TimeTempGauge {
+            id: ttGauge
+            //x: 700
+            //y: 0
+            anchors.right: parent.right
+            //anchors.bottom: parent.bottom
+            anchors.top: parent.top
+            width: 150
+            height: 150
+
+            timeMinVal: appwnd.timeMinVal
+            timeMaxVal: appwnd.timeMaxVal
+            tempMinVal: appwnd.tempMinVal
+            tempMaxVal: appwnd.tempMaxVal
+
+            dialType: RadialBarMax.MinToMax
+            timeFillType: RadialBarMax.RotateGradient
+            tempFillType: RadialBarMax.Gradient
+        }
+
+        TimeTempGauge {
+            id: ttGauge2
+            //x: 700
+            //y: 0
+            anchors.right: parent.right
+            //anchors.bottom: parent.bottom
+            anchors.top: ttGauge.bottom
+            width: 150
+            height: 150
+
+            timeMinVal: appwnd.timeMinVal
+            timeMaxVal: appwnd.timeMaxVal
+            tempMinVal: 49
+            tempMaxVal: 51
+            tempVal: 50
+
+            dialType: RadialBarMax.MinToMax
+            timeFillType: RadialBarMax.RotateGradient
+            tempFillType: RadialBarMax.Point
+
+
+        }
+
+        TimeTempGauge {
+            id: ttGauge3
+            //x: 700
+            //y: 0
+            anchors.right: parent.right
+            //anchors.bottom: parent.bottom
+            anchors.top: ttGauge2.bottom
+            width: 150
+            height: 150
+
+            timeMinVal: appwnd.timeMinVal
+            timeMaxVal: appwnd.timeMaxVal
+            tempMinVal: appwnd.tempMinVal
+            tempMaxVal: appwnd.tempMaxVal
+
+            dialType: RadialBarMax.MaxToMin
+            timeFillType: RadialBarMax.RotateGradient
+            tempFillType: RadialBarMax.Gradient
+
+
+        }
+
+        TimeTempGauge {
+            id: ttGauge4
+            //x: 700
+            //y: 0
+            anchors.right: parent.right
+            //anchors.bottom: parent.bottom
+            anchors.top: ttGauge3.bottom
+            width: 150
+            height: 150
+
+            timeMinVal: appwnd.timeMinVal
+            timeMaxVal: appwnd.timeMaxVal
+            tempMinVal: appwnd.tempMinVal
+            tempMaxVal: appwnd.tempMaxVal
+
+            dialType: RadialBarMax.MinToMax
+            timeFillType: RadialBarMax.RotateGradient
+            tempFillType: RadialBarMax.Point
+
+
+        }
+    }
+
     Timer {
         id: updateDataTimer
         interval: 100
@@ -187,11 +299,23 @@ ApplicationWindow {
         repeat: true
         onTriggered: {
             tempColdToHotActVal = adjustVal(tempColdToHotActVal, targetTemp, tempMinVal, tempMaxVal)
-            tempHotToColeActVal = tempMaxVal - (tempColdToHotActVal - tempMinVal)
+
+            tempHotToColdActVal = tempMaxVal - (tempColdToHotActVal - tempMinVal)
             targetTemp = adjustTarget(tempColdToHotActVal, targetTemp, tempMinVal, tempMaxVal)
             var endTime = new Date()
             currentTimeMS = endTime - startTime
             timeActVal = Math.floor(currentTimeMS / 1000)
+
+            ttGauge.tempVal = tempColdToHotActVal
+            ttGauge.timeVal = timeActVal
+            ttGauge2.tempVal = 50 + (0.05 - (Math.random() / 10))
+            ttGauge2.timeVal = timeActVal
+            ttGauge3.tempVal = tempHotToColdActVal
+            ttGauge3.timeVal = timeActVal
+            ttGauge4.tempVal = tempColdToHotActVal
+            ttGauge4.timeVal = timeActVal
         }
     }
+
+
 }

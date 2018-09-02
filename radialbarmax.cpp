@@ -57,7 +57,7 @@ RadialBarMax::RadialBarMax(QQuickItem *parent)
       m_ShowText(true),
       m_PenStyle(Qt::FlatCap),
       m_DialType(DialType::MinToMax),
-      m_RotateGradient(false)
+      m_FillType(FillType::Solid)
 {
     setWidth(200);
     setHeight(200);
@@ -78,12 +78,10 @@ void RadialBarMax::paint(QPainter *painter)
     pen.setCapStyle(m_PenStyle);
 
     startAngle = -90 - m_StartAngle;
-    if(FullDial != m_DialType)
-    {
+    if(FullDial != m_DialType) {
         spanAngle = 0 - m_SpanAngle;
     }
-    else
-    {
+    else {
         spanAngle = -360;
     }
 
@@ -157,21 +155,36 @@ void RadialBarMax::paint(QPainter *painter)
             break;
     }
 
-    int gradientRotation = -90;
-    if (m_RotateGradient) {
-        gradientRotation += valueAngle - 90;
-    }
-    QConicalGradient gradient(QPointF(this->width() / 2.0, this->height() / 2.0), gradientRotation);
-    gradient.setColorAt(0.00, m_ProgressMaxColor);
-    gradient.setColorAt(0.16, m_ProgressMaxColor);
-    gradient.setColorAt(0.50, m_ProgressMidColor);
-    gradient.setColorAt(0.84, m_ProgressMinColor);
-    gradient.setColorAt(1.00, m_ProgressMinColor);
+    switch(m_FillType) {
+        case Solid:
+            pen.setBrush(QBrush(m_ProgressMidColor));
+            break;
+        case Point:
+        case RotateGradient:
+        case Gradient:
+            int gradientRotation = -90;
+            if (m_FillType == FillType::RotateGradient) {
+                gradientRotation += valueAngle - 90;
+            }
+            QConicalGradient gradient(QPointF(this->width() / 2.0, this->height() / 2.0), gradientRotation);
+            gradient.setColorAt(0.00, m_DialType == DialType::MinToMax ? m_ProgressMaxColor : m_ProgressMinColor);
+            gradient.setColorAt(0.16, m_DialType == DialType::MinToMax ? m_ProgressMaxColor : m_ProgressMinColor);
+            gradient.setColorAt(0.50, m_ProgressMidColor);
+            gradient.setColorAt(0.84, m_DialType == DialType::MinToMax ? m_ProgressMinColor : m_ProgressMaxColor);
+            gradient.setColorAt(1.00, m_DialType == DialType::MinToMax ? m_ProgressMinColor : m_ProgressMaxColor);
 
-    pen.setBrush(QBrush(gradient));
+            pen.setBrush(QBrush(gradient));
+            break;
+    }
 
     painter->setPen(pen);
-    painter->drawArc(rect.adjusted(offset, offset, -offset, -offset), startAngle * 16, valueAngle * 16);
+    qInfo() << "valueAngle: " << m_MinValue << ":" <<  m_MaxValue << ":" << valueAngle;
+    if (m_FillType == FillType::Point) {
+        painter->drawArc(rect.adjusted(offset, offset, -offset, -offset), (startAngle + valueAngle) * 16, 16);
+    }
+    else {
+        painter->drawArc(rect.adjusted(offset, offset, -offset, -offset), startAngle * 16, valueAngle * 16);
+    }
     painter->restore();
 }
 
@@ -364,6 +377,14 @@ void RadialBarMax::setDialType(RadialBarMax::DialType type)
     emit dialTypeChanged();
 }
 
+void RadialBarMax::setFillType(RadialBarMax::FillType type)
+{
+    if(m_FillType == type)
+        return;
+    m_FillType = type;
+    emit fillTypeChanged();
+}
+
 void RadialBarMax::setTextFont(QFont font)
 {
     if(m_TextFont == font)
@@ -372,10 +393,4 @@ void RadialBarMax::setTextFont(QFont font)
     emit textFontChanged();
 }
 
-void RadialBarMax::setRotateGradient(bool rotate)
-{
-    if(m_RotateGradient == rotate)
-        return;
-    m_RotateGradient = rotate;
-}
 
